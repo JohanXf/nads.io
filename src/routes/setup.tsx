@@ -8,7 +8,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Plus, Trash2, Upload, ExternalLink, Loader2 } from "lucide-react";
+import { Plus, Trash2, Upload, ExternalLink, Loader2, Crown, Image as ImageIcon, Music } from "lucide-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/setup")({
