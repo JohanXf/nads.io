@@ -339,6 +339,77 @@ function SetupPage() {
             </div>
           </div>
 
+          {/* Premium features */}
+          <div className={`rounded-2xl border p-6 shadow-card space-y-5 ${isPremium ? "border-foreground/40 bg-card-glass" : "border-dashed border-border bg-card-glass/40"}`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Crown className={`h-4 w-4 ${isPremium ? "text-foreground" : "text-muted-foreground"}`} />
+                <Label className="font-display text-base">Premium features</Label>
+              </div>
+              {isPremium ? (
+                <span className="rounded-full bg-foreground px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-background">PRO</span>
+              ) : (
+                <Link to="/premium" className="text-xs text-primary hover:underline">Upgrade →</Link>
+              )}
+            </div>
+
+            {!isPremium && (
+              <p className="text-xs text-muted-foreground">Unlock custom banners, profile music, and the animated glowing ring on your avatar.</p>
+            )}
+
+            <fieldset disabled={!isPremium} className={`space-y-5 ${!isPremium ? "opacity-50 pointer-events-none" : ""}`}>
+              <div>
+                <Label className="text-sm">Custom banner</Label>
+                <div className="mt-2 overflow-hidden rounded-xl border border-border bg-input">
+                  <div className="relative h-28 w-full bg-gradient-primary">
+                    {bannerUrl && <img src={bannerUrl} alt="" className="h-full w-full object-cover" />}
+                    <label className="absolute bottom-2 right-2 inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-background/90 px-2.5 py-1 text-xs font-medium shadow hover:bg-background">
+                      {uploadingBanner ? <Loader2 className="h-3 w-3 animate-spin" /> : <ImageIcon className="h-3 w-3" />}
+                      {bannerUrl ? "Replace" : "Upload"}
+                      <input type="file" accept="image/*" className="hidden" onChange={onBannerUpload} disabled={uploadingBanner} />
+                    </label>
+                    {bannerUrl && (
+                      <button type="button" onClick={() => setBannerUrl(null)} className="absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-background/90 text-destructive shadow hover:bg-background">
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <p className="mt-1.5 text-xs text-muted-foreground">JPG, PNG, or WebP · up to 5MB · 16:5 looks best</p>
+              </div>
+
+              <div>
+                <Label className="text-sm">Profile music</Label>
+                <div className="mt-2 flex items-center gap-2">
+                  <label className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-border bg-input px-3 text-sm hover:bg-secondary">
+                    {uploadingMusic ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Music className="h-3.5 w-3.5" />}
+                    {musicUrl ? "Replace track" : "Upload track"}
+                    <input type="file" accept="audio/*" className="hidden" onChange={onMusicUpload} disabled={uploadingMusic} />
+                  </label>
+                  {musicUrl && (
+                    <Button type="button" size="icon" variant="ghost" onClick={() => { setMusicUrl(null); setMusicTitle(""); }}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  )}
+                </div>
+                {musicUrl && (
+                  <Input
+                    placeholder="Track title"
+                    value={musicTitle}
+                    onChange={(e) => setMusicTitle(e.target.value)}
+                    className="mt-2"
+                    maxLength={60}
+                  />
+                )}
+                <p className="mt-1.5 text-xs text-muted-foreground">MP3, WAV, or OGG · up to 8MB · plays on your public profile</p>
+              </div>
+
+              <div className="rounded-lg border border-border bg-background/40 px-3 py-2 text-xs text-muted-foreground">
+                ✨ Your avatar shows the animated glowing ring automatically.
+              </div>
+            </fieldset>
+          </div>
+
           <div className="rounded-2xl border border-border bg-card-glass p-6 shadow-card space-y-4">
             <div className="flex items-center justify-between">
               <Label>Links</Label>
