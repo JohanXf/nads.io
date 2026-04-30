@@ -29,7 +29,7 @@ const tiers = [
   },
   {
     name: "Premium",
-    price: "$5",
+    price: "$1",
     cadence: "/month",
     features: [
       "Custom profile banner",
