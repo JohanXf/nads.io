@@ -229,3 +229,58 @@ function LinkGrid({ links }: { links: LinkItem[] }) {
     </div>
   );
 }
+
+function MusicPlayer({ url, title }: { url: string; title: string }) {
+  const [playing, setPlaying] = useState(false);
+  const [audio] = useState(() => (typeof Audio !== "undefined" ? new Audio(url) : null));
+
+  useEffect(() => {
+    if (!audio) return;
+    const onEnd = () => setPlaying(false);
+    audio.addEventListener("ended", onEnd);
+    return () => {
+      audio.pause();
+      audio.removeEventListener("ended", onEnd);
+    };
+  }, [audio]);
+
+  const toggle = () => {
+    if (!audio) return;
+    if (playing) {
+      audio.pause();
+      setPlaying(false);
+    } else {
+      audio.play().catch(() => {});
+      setPlaying(true);
+    }
+  };
+
+  return (
+    <div className="mt-3 w-full rounded-2xl border border-border bg-card-glass p-3 shadow-3d-sm">
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={toggle}
+          aria-label={playing ? "Pause" : "Play"}
+          className={`relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground shadow-glow transition hover:scale-105 ${playing ? "music-pulse" : ""}`}
+        >
+          {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 translate-x-0.5" />}
+        </button>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <Music className="h-2.5 w-2.5" /> Now playing
+          </div>
+          <div className="truncate font-display text-sm font-semibold">{title}</div>
+        </div>
+        {playing && (
+          <div className="flex items-end gap-0.5 pr-1">
+            <span className="music-bar h-3 w-0.5 rounded-full bg-foreground" style={{ animationDelay: "0ms" }} />
+            <span className="music-bar h-4 w-0.5 rounded-full bg-foreground" style={{ animationDelay: "150ms" }} />
+            <span className="music-bar h-2.5 w-0.5 rounded-full bg-foreground" style={{ animationDelay: "300ms" }} />
+            <span className="music-bar h-3.5 w-0.5 rounded-full bg-foreground" style={{ animationDelay: "450ms" }} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
