@@ -32,6 +32,7 @@ function AnalyticsPage() {
   useEffect(() => {
     if (!user) return;
     let active = true;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
 
     (async () => {
       const { data: p } = await supabase
@@ -48,7 +49,8 @@ function AnalyticsPage() {
         .eq("profile_id", p.id);
       if (active) setLinkCount(count ?? 0);
 
-      const channel = supabase
+      if (!active) return;
+      channel = supabase
         .channel(`analytics:${p.id}`)
         .on(
           "postgres_changes",
@@ -74,14 +76,12 @@ function AnalyticsPage() {
         .subscribe((status) => {
           if (status === "SUBSCRIBED") setLive(true);
         });
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
     })();
 
     return () => {
       active = false;
+      setLive(false);
+      if (channel) supabase.removeChannel(channel);
     };
   }, [user]);
 
