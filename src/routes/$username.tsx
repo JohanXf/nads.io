@@ -72,28 +72,43 @@ function ProfilePage() {
   return (
     <div className="min-h-screen bg-hero">
       <main className="mx-auto flex max-w-md flex-col items-center px-5 pt-16 pb-12">
-        <div className="w-full rounded-3xl border border-border bg-card-glass p-8 shadow-3d">
-          <div className="flex flex-col items-center">
-            <div className="h-24 w-24 overflow-hidden rounded-full bg-gradient-primary shadow-3d-sm">
-              {profile.avatar_url && (
-                <img src={profile.avatar_url} alt={profile.display_name ?? profile.username ?? ""} className="h-full w-full object-cover" />
+        <div className="w-full overflow-hidden rounded-3xl border border-border bg-card-glass shadow-3d">
+          {profile.is_premium && profile.banner_url && (
+            <div className="relative h-32 w-full overflow-hidden">
+              <img src={profile.banner_url} alt="" className="h-full w-full object-cover" />
+              <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card to-transparent" />
+            </div>
+          )}
+          <div className={`p-8 ${profile.is_premium && profile.banner_url ? "pt-0 -mt-10 relative" : ""}`}>
+            <div className="flex flex-col items-center">
+              <div className={`relative ${profile.is_premium ? "premium-glow-ring" : ""}`}>
+                <div className="h-24 w-24 overflow-hidden rounded-full bg-gradient-primary shadow-3d-sm ring-4 ring-card">
+                  {profile.avatar_url && (
+                    <img src={profile.avatar_url} alt={profile.display_name ?? profile.username ?? ""} className="h-full w-full object-cover" />
+                  )}
+                </div>
+                {profile.is_premium && (
+                  <span className="absolute -bottom-1 -right-1 inline-flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-background shadow-glow ring-2 ring-card">
+                    <Crown className="h-3.5 w-3.5" />
+                  </span>
+                )}
+              </div>
+              <h1 className="mt-3 font-display text-2xl font-bold">{profile.display_name || `@${profile.username}`}</h1>
+              <p className="text-sm text-primary">@{profile.username}</p>
+              {profile.bio && (
+                <p className="mt-2 max-w-sm text-center text-sm leading-relaxed text-muted-foreground">
+                  {profile.bio}
+                </p>
               )}
             </div>
-            <h1 className="mt-3 font-display text-2xl font-bold">{profile.display_name || `@${profile.username}`}</h1>
-            <p className="text-sm text-primary">@{profile.username}</p>
-            {profile.bio && (
-              <p className="mt-2 max-w-sm text-center text-sm leading-relaxed text-muted-foreground">
-                {profile.bio}
-              </p>
-            )}
-          </div>
 
-          <div className="mt-4 w-full">
-            {links.length === 0 ? (
-              <p className="text-center text-sm text-muted-foreground">No links yet.</p>
-            ) : (
-              <LinkGrid links={links} />
-            )}
+            <div className="mt-4 w-full">
+              {links.length === 0 ? (
+                <p className="text-center text-sm text-muted-foreground">No links yet.</p>
+              ) : (
+                <LinkGrid links={links} />
+              )}
+            </div>
           </div>
         </div>
 
@@ -104,6 +119,10 @@ function ProfilePage() {
             <span className="text-muted-foreground">{views === 1 ? "profile view" : "profile views"}</span>
           </div>
         </div>
+
+        {profile.is_premium && profile.music_url && (
+          <MusicPlayer url={profile.music_url} title={profile.music_title || "Now Playing"} />
+        )}
 
 
         {showClaim && (
