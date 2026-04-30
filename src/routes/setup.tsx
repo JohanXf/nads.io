@@ -40,6 +40,12 @@ function SetupPage() {
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+  const [musicUrl, setMusicUrl] = useState<string | null>(null);
+  const [musicTitle, setMusicTitle] = useState("");
+  const [isPremium, setIsPremium] = useState(false);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [uploadingMusic, setUploadingMusic] = useState(false);
   const [links, setLinks] = useState<LinkRow[]>([{ label: "", url: "" }]);
   const [usernameError, setUsernameError] = useState("");
 
