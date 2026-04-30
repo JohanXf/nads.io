@@ -93,16 +93,16 @@ function ProfilePage() {
                   </span>
                 )}
               </div>
-              <h1 className="mt-3 font-display text-2xl font-bold">{profile.display_name || profile.username}</h1>
-              <p className="text-sm text-primary">@{profile.username}</p>
+              <h1 className="mt-3 font-display text-2xl font-bold leading-tight">{profile.display_name || profile.username}</h1>
+              <p className="text-sm text-primary leading-tight">@{profile.username}</p>
               {profile.bio && (
-                <p className="mt-2 max-w-sm text-center text-sm leading-relaxed text-muted-foreground">
+                <p className="max-w-sm text-center text-sm leading-snug text-muted-foreground">
                   {profile.bio}
                 </p>
               )}
             </div>
 
-            <div className="mt-4 w-full">
+            <div className="mt-3 w-full">
               {links.length === 0 ? (
                 <p className="text-center text-sm text-muted-foreground">No links yet.</p>
               ) : (
