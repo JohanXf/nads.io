@@ -37,7 +37,7 @@ function AnalyticsPage() {
       const { data: p } = await supabase
         .from("profiles")
         .select("id, username, view_count, is_premium")
-        .eq("user_id", user.id)
+        .eq("id", user.id)
         .maybeSingle();
       if (!active || !p) return;
       setProfile(p as Profile);
