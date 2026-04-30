@@ -140,6 +140,9 @@ function SetupPage() {
         display_name: displayName.trim() || null,
         bio: bio.trim() || null,
         avatar_url: avatarUrl,
+        banner_url: isPremium ? bannerUrl : null,
+        music_url: isPremium ? musicUrl : null,
+        music_title: isPremium ? (musicTitle.trim() || null) : null,
       }, { onConflict: "id" });
 
     if (profileErr) {
