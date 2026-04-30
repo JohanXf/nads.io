@@ -118,6 +118,39 @@ function SetupPage() {
     toast.success("Avatar updated");
   };
 
+  const onBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!file.type.startsWith("image/")) { toast.error("Banner must be an image"); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error("Banner must be under 5MB"); return; }
+    setUploadingBanner(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${user.id}/banner-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("banners").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) { toast.error("Upload failed", { description: error.message }); setUploadingBanner(false); return; }
+    const { data } = supabase.storage.from("banners").getPublicUrl(path);
+    setBannerUrl(data.publicUrl);
+    setUploadingBanner(false);
+    toast.success("Banner uploaded");
+  };
+
+  const onMusicUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!file.type.startsWith("audio/")) { toast.error("Must be an audio file"); return; }
+    if (file.size > 8 * 1024 * 1024) { toast.error("Audio must be under 8MB"); return; }
+    setUploadingMusic(true);
+    const ext = file.name.split(".").pop() || "mp3";
+    const path = `${user.id}/music-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("music").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) { toast.error("Upload failed", { description: error.message }); setUploadingMusic(false); return; }
+    const { data } = supabase.storage.from("music").getPublicUrl(path);
+    setMusicUrl(data.publicUrl);
+    if (!musicTitle) setMusicTitle(file.name.replace(/\.[^.]+$/, ""));
+    setUploadingMusic(false);
+    toast.success("Music uploaded");
+  };
+
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!user) return;
