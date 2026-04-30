@@ -76,7 +76,7 @@ function ProfilePage() {
           {profile.is_premium && profile.banner_url && (
             <div className="relative h-32 w-full overflow-hidden">
               <img src={profile.banner_url} alt="" className="h-full w-full object-cover" />
-              <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-card/60 to-transparent" />
             </div>
           )}
           <div className={`p-8 ${profile.is_premium && profile.banner_url ? "pt-0 -mt-10 relative" : ""}`}>
@@ -93,7 +93,7 @@ function ProfilePage() {
                   </span>
                 )}
               </div>
-              <h1 className="mt-3 font-display text-2xl font-bold">{profile.display_name || `@${profile.username}`}</h1>
+              <h1 className="mt-3 font-display text-2xl font-bold">{profile.display_name || profile.username}</h1>
               <p className="text-sm text-primary">@{profile.username}</p>
               {profile.bio && (
                 <p className="mt-2 max-w-sm text-center text-sm leading-relaxed text-muted-foreground">
@@ -230,56 +230,114 @@ function LinkGrid({ links }: { links: LinkItem[] }) {
   );
 }
 
+function fmt(t: number) {
+  if (!isFinite(t) || t < 0) t = 0;
+  const m = Math.floor(t / 60);
+  const s = Math.floor(t % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
 function MusicPlayer({ url, title }: { url: string; title: string }) {
   const [playing, setPlaying] = useState(false);
-  const [audio] = useState(() => (typeof Audio !== "undefined" ? new Audio(url) : null));
+  const [current, setCurrent] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = (function () {
+    const [a] = useState<HTMLAudioElement | null>(() =>
+      typeof Audio !== "undefined" ? new Audio(url) : null,
+    );
+    return a;
+  })();
+  const [bars, setBars] = useState<number[]>(() => Array.from({ length: 28 }, () => 0.2));
 
   useEffect(() => {
-    if (!audio) return;
+    if (!audioRef) return;
+    const a = audioRef;
+    const onTime = () => setCurrent(a.currentTime);
+    const onMeta = () => setDuration(a.duration || 0);
     const onEnd = () => setPlaying(false);
-    audio.addEventListener("ended", onEnd);
+    a.addEventListener("timeupdate", onTime);
+    a.addEventListener("loadedmetadata", onMeta);
+    a.addEventListener("ended", onEnd);
     return () => {
-      audio.pause();
-      audio.removeEventListener("ended", onEnd);
+      a.pause();
+      a.removeEventListener("timeupdate", onTime);
+      a.removeEventListener("loadedmetadata", onMeta);
+      a.removeEventListener("ended", onEnd);
     };
-  }, [audio]);
+  }, [audioRef]);
+
+  // Animated frequency meter (visual only — random walk while playing)
+  useEffect(() => {
+    if (!playing) return;
+    const id = setInterval(() => {
+      setBars((prev) => prev.map(() => 0.15 + Math.random() * 0.85));
+    }, 110);
+    return () => clearInterval(id);
+  }, [playing]);
 
   const toggle = () => {
-    if (!audio) return;
+    if (!audioRef) return;
     if (playing) {
-      audio.pause();
+      audioRef.pause();
       setPlaying(false);
     } else {
-      audio.play().catch(() => {});
+      audioRef.play().catch(() => {});
       setPlaying(true);
     }
   };
 
+  const seek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!audioRef || !duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    audioRef.currentTime = ratio * duration;
+    setCurrent(audioRef.currentTime);
+  };
+
+  const progress = duration ? (current / duration) * 100 : 0;
+
   return (
-    <div className="mt-3 w-full rounded-2xl border border-border bg-card-glass p-3 shadow-3d-sm">
+    <div className="mt-3 w-full rounded-2xl border border-border bg-card-glass p-4 shadow-3d-sm">
       <div className="flex items-center gap-3">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-primary text-primary-foreground shadow-glow">
+          <Music className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="truncate font-display text-base font-semibold leading-tight">{title}</div>
+          <div className="truncate text-xs text-muted-foreground">Now playing</div>
+        </div>
         <button
           type="button"
           onClick={toggle}
           aria-label={playing ? "Pause" : "Play"}
-          className={`relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground shadow-glow transition hover:scale-105 ${playing ? "music-pulse" : ""}`}
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-foreground text-background shadow-glow transition hover:scale-105"
         >
           {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 translate-x-0.5" />}
         </button>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground">
-            <Music className="h-2.5 w-2.5" /> Now playing
-          </div>
-          <div className="truncate font-display text-sm font-semibold">{title}</div>
+      </div>
+
+      <div className="mt-4 flex items-center gap-3 text-[10px] tabular-nums text-muted-foreground">
+        <span>{fmt(current)}</span>
+        <div
+          onClick={seek}
+          className="group relative h-1.5 flex-1 cursor-pointer overflow-hidden rounded-full bg-background/60"
+        >
+          <div
+            className="absolute inset-y-0 left-0 rounded-full bg-gradient-primary"
+            style={{ width: `${progress}%` }}
+          />
         </div>
-        {playing && (
-          <div className="flex items-end gap-0.5 pr-1">
-            <span className="music-bar h-3 w-0.5 rounded-full bg-foreground" style={{ animationDelay: "0ms" }} />
-            <span className="music-bar h-4 w-0.5 rounded-full bg-foreground" style={{ animationDelay: "150ms" }} />
-            <span className="music-bar h-2.5 w-0.5 rounded-full bg-foreground" style={{ animationDelay: "300ms" }} />
-            <span className="music-bar h-3.5 w-0.5 rounded-full bg-foreground" style={{ animationDelay: "450ms" }} />
-          </div>
-        )}
+        <span>{fmt(duration)}</span>
+      </div>
+
+      <div className="mt-3 flex h-8 items-end justify-between gap-[2px]">
+        {bars.map((h, i) => (
+          <span
+            key={i}
+            className="w-[3px] rounded-full bg-gradient-to-t from-primary/40 to-foreground transition-[height] duration-150 ease-out"
+            style={{ height: `${(playing ? h : 0.15) * 100}%` }}
+          />
+        ))}
       </div>
     </div>
   );
