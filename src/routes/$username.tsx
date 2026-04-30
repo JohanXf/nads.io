@@ -76,10 +76,10 @@ function ProfilePage() {
           {profile.is_premium && profile.banner_url && (
             <div className="relative h-32 w-full overflow-hidden">
               <img src={profile.banner_url} alt="" className="h-full w-full object-cover" />
-              <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-card/60 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent via-card/70 to-card" />
             </div>
           )}
-          <div className={`p-8 ${profile.is_premium && profile.banner_url ? "pt-0 -mt-10 relative" : ""}`}>
+          <div className={`px-6 pt-6 pb-3 ${profile.is_premium && profile.banner_url ? "pt-0 -mt-12 relative" : ""}`}>
             <div className="flex flex-col items-center">
               <div className={`relative ${profile.is_premium ? "premium-glow-ring" : ""}`}>
                 <div className="h-24 w-24 overflow-hidden rounded-full bg-gradient-primary shadow-3d-sm ring-4 ring-card">
@@ -93,16 +93,16 @@ function ProfilePage() {
                   </span>
                 )}
               </div>
-              <h1 className="mt-3 font-display text-2xl font-bold">{profile.display_name || profile.username}</h1>
-              <p className="text-sm text-primary">@{profile.username}</p>
+              <h1 className="mt-3 font-display text-2xl font-bold leading-tight">{profile.display_name || profile.username}</h1>
+              <p className="text-sm text-primary leading-tight">@{profile.username}</p>
               {profile.bio && (
-                <p className="mt-2 max-w-sm text-center text-sm leading-relaxed text-muted-foreground">
+                <p className="max-w-sm text-center text-sm leading-snug text-muted-foreground">
                   {profile.bio}
                 </p>
               )}
             </div>
 
-            <div className="mt-4 w-full">
+            <div className="mt-3 w-full">
               {links.length === 0 ? (
                 <p className="text-center text-sm text-muted-foreground">No links yet.</p>
               ) : (
@@ -165,7 +165,7 @@ function LinkTile({ link, className = "" }: { link: LinkItem; className?: string
       href={link.url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`group flex items-center justify-center rounded-xl border border-border bg-background/50 px-3 py-2.5 text-xs font-medium shadow-3d-sm transition-all hover:-translate-y-0.5 hover:border-primary ${className}`}
+      className={`group flex items-center justify-center rounded-md border border-border bg-background/50 px-3 py-2.5 text-xs font-medium shadow-3d-sm transition-all hover:-translate-y-0.5 hover:border-primary ${className}`}
     >
       <span className="truncate text-center">{link.label}</span>
     </a>
@@ -330,7 +330,7 @@ function MusicPlayer({ url, title }: { url: string; title: string }) {
         <span>{fmt(duration)}</span>
       </div>
 
-      <div className="mt-3 flex h-8 items-end justify-between gap-[2px]">
+      <div className="mt-3 flex h-4 items-end justify-between gap-[2px]">
         {bars.map((h, i) => (
           <span
             key={i}
