@@ -173,7 +173,7 @@ function SetupPage() {
 
     setSaving(false);
     toast.success("Profile saved!", {
-      description: `Live at the10ksquad.io/${parsed.data}`,
+      description: `Live at nads.io/${parsed.data}`,
     });
   };
 
@@ -200,7 +200,7 @@ function SetupPage() {
                   params={{ username }}
                   className="text-primary hover:underline"
                 >
-                  the10ksquad.io/{username} <ExternalLink className="inline h-3 w-3" />
+                  nads.io/{username} <ExternalLink className="inline h-3 w-3" />
                 </Link>
               </>
             ) : (
@@ -247,7 +247,7 @@ function SetupPage() {
               <Label htmlFor="username">Username</Label>
               <div className="mt-2 flex overflow-hidden rounded-lg border border-border bg-input">
                 <span className="flex items-center px-3 text-sm text-muted-foreground border-r border-border">
-                  the10ksquad.io/
+                  nads.io/
                 </span>
                 <input
                   id="username"

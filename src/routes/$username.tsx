@@ -26,12 +26,12 @@ export const Route = createFileRoute("/$username")({
     if (!loaderData) return { meta: [] };
     const { profile } = loaderData;
     const name = profile.display_name || `@${profile.username}`;
-    const desc = profile.bio || `${name} on the10ksquad.io`;
+    const desc = profile.bio || `${name} on nads.io`;
     return {
       meta: [
-        { title: `${name} — the10ksquad.io/${profile.username}` },
+        { title: `${name} — nads.io/${profile.username}` },
         { name: "description", content: desc },
-        { property: "og:title", content: `${name} — the10ksquad.io` },
+        { property: "og:title", content: `${name} — nads.io` },
         { property: "og:description", content: desc },
         ...(profile.avatar_url ? [{ property: "og:image", content: profile.avatar_url }] : []),
       ],
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/$username")({
     <div className="flex min-h-screen items-center justify-center bg-hero px-4">
       <div className="text-center">
         <h1 className="font-display text-5xl font-bold text-gradient">404</h1>
-        <p className="mt-3 text-muted-foreground">This the10ksquad.io profile doesn't exist.</p>
+        <p className="mt-3 text-muted-foreground">This nads.io profile doesn't exist.</p>
         <Link to="/" className="mt-6 inline-block text-primary hover:underline">
           Claim it →
         </Link>
@@ -116,7 +116,7 @@ function ProfilePage() {
             >
               <X className="h-4 w-4" />
             </button>
-            <p className="font-display text-lg font-semibold">Want your own the10ksquad.io link?</p>
+            <p className="font-display text-lg font-semibold">Want your own nads.io link?</p>
             <p className="mt-1 text-xs text-muted-foreground">Free forever · 60 seconds to set up</p>
             <Link to="/login" className="mt-4 inline-block">
               <Button className="h-11 bg-gradient-primary px-6 shadow-glow">
@@ -131,7 +131,7 @@ function ProfilePage() {
           className="mt-8 inline-flex items-center gap-1.5 text-xs text-muted-foreground/70 hover:text-foreground"
         >
           <Sparkles className="h-3 w-3" />
-          made on the10ksquad.io
+          made on nads.io
         </Link>
       </main>
     </div>

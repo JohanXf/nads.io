@@ -10,7 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SetupRouteImport } from './routes/setup'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as HelpRouteImport } from './routes/help'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as UsernameRouteImport } from './routes/$username'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -19,9 +23,29 @@ const SetupRoute = SetupRouteImport.update({
   path: '/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PremiumRoute = PremiumRouteImport.update({
+  id: '/premium',
+  path: '/premium',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UsernameRoute = UsernameRouteImport.update({
@@ -38,34 +62,75 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$username': typeof UsernameRoute
+  '/analytics': typeof AnalyticsRoute
+  '/help': typeof HelpRoute
   '/login': typeof LoginRoute
+  '/premium': typeof PremiumRoute
+  '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$username': typeof UsernameRoute
+  '/analytics': typeof AnalyticsRoute
+  '/help': typeof HelpRoute
   '/login': typeof LoginRoute
+  '/premium': typeof PremiumRoute
+  '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$username': typeof UsernameRoute
+  '/analytics': typeof AnalyticsRoute
+  '/help': typeof HelpRoute
   '/login': typeof LoginRoute
+  '/premium': typeof PremiumRoute
+  '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$username' | '/login' | '/setup'
+  fullPaths:
+    | '/'
+    | '/$username'
+    | '/analytics'
+    | '/help'
+    | '/login'
+    | '/premium'
+    | '/settings'
+    | '/setup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$username' | '/login' | '/setup'
-  id: '__root__' | '/' | '/$username' | '/login' | '/setup'
+  to:
+    | '/'
+    | '/$username'
+    | '/analytics'
+    | '/help'
+    | '/login'
+    | '/premium'
+    | '/settings'
+    | '/setup'
+  id:
+    | '__root__'
+    | '/'
+    | '/$username'
+    | '/analytics'
+    | '/help'
+    | '/login'
+    | '/premium'
+    | '/settings'
+    | '/setup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   UsernameRoute: typeof UsernameRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  HelpRoute: typeof HelpRoute
   LoginRoute: typeof LoginRoute
+  PremiumRoute: typeof PremiumRoute
+  SettingsRoute: typeof SettingsRoute
   SetupRoute: typeof SetupRoute
 }
 
@@ -78,11 +143,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/premium': {
+      id: '/premium'
+      path: '/premium'
+      fullPath: '/premium'
+      preLoaderRoute: typeof PremiumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$username': {
@@ -105,7 +198,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   UsernameRoute: UsernameRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  HelpRoute: HelpRoute,
   LoginRoute: LoginRoute,
+  PremiumRoute: PremiumRoute,
+  SettingsRoute: SettingsRoute,
   SetupRoute: SetupRoute,
 }
 export const routeTree = rootRouteImport
