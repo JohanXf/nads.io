@@ -17,7 +17,7 @@ const items: NavItem[] = [
   { to: "/", label: "Home", icon: Home },
   { to: "/setup", label: "Edit profile", icon: User, authRequired: true },
   { to: "/premium", label: "Premium", icon: Crown, badge: "PRO" },
-  { to: "/analytics", label: "Analytics", icon: BarChart3, authRequired: true },
+  { to: "/analytics", label: "Analytics", icon: BarChart3, badge: "PRO", authRequired: true },
   { to: "/settings", label: "Settings", icon: Settings, authRequired: true },
   { to: "/help", label: "Help", icon: HelpCircle },
 ];
