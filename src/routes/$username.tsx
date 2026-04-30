@@ -71,7 +71,13 @@ function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-hero">
-      <main className="mx-auto flex max-w-md flex-col items-center px-5 pt-16 pb-12">
+      <main className="mx-auto flex max-w-md flex-col items-center px-5 pt-10 pb-12">
+        <div className="mb-2 inline-flex items-center gap-1 rounded-full border border-border bg-card-glass px-2 py-0.5 text-[9px] shadow-3d-sm">
+          <Eye className="h-2.5 w-2.5 text-primary" />
+          <span className="font-semibold tabular-nums">{views.toLocaleString()}</span>
+          <span className="text-muted-foreground">views</span>
+        </div>
+
         <div className="w-full overflow-hidden rounded-3xl border border-border bg-card-glass shadow-3d">
           {profile.is_premium && profile.banner_url && (
             <div className="relative h-32 w-full overflow-hidden">
@@ -109,14 +115,6 @@ function ProfilePage() {
                 <LinkGrid links={links} />
               )}
             </div>
-          </div>
-        </div>
-
-        <div className="mt-3 w-full rounded-xl border border-border bg-card-glass px-3 py-1.5 shadow-3d-sm">
-          <div className="flex items-center justify-center gap-1.5 text-[11px]">
-            <Eye className="h-3 w-3 text-primary" />
-            <span className="font-semibold">{views.toLocaleString()}</span>
-            <span className="text-muted-foreground">{views === 1 ? "profile view" : "profile views"}</span>
           </div>
         </div>
 
