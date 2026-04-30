@@ -79,7 +79,7 @@ function ProfilePage() {
               <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent via-card/70 to-card" />
             </div>
           )}
-          <div className={`p-6 ${profile.is_premium && profile.banner_url ? "pt-0 -mt-12 relative" : ""}`}>
+          <div className={`px-6 pt-6 pb-3 ${profile.is_premium && profile.banner_url ? "pt-0 -mt-12 relative" : ""}`}>
             <div className="flex flex-col items-center">
               <div className={`relative ${profile.is_premium ? "premium-glow-ring" : ""}`}>
                 <div className="h-24 w-24 overflow-hidden rounded-full bg-gradient-primary shadow-3d-sm ring-4 ring-card">
