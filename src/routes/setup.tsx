@@ -8,7 +8,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Plus, Trash2, Upload, ExternalLink, Loader2 } from "lucide-react";
+import { Plus, Trash2, Upload, ExternalLink, Loader2, Crown, Image as ImageIcon, Music } from "lucide-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/setup")({
@@ -40,6 +40,12 @@ function SetupPage() {
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+  const [musicUrl, setMusicUrl] = useState<string | null>(null);
+  const [musicTitle, setMusicTitle] = useState("");
+  const [isPremium, setIsPremium] = useState(false);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [uploadingMusic, setUploadingMusic] = useState(false);
   const [links, setLinks] = useState<LinkRow[]>([{ label: "", url: "" }]);
   const [usernameError, setUsernameError] = useState("");
 
@@ -60,6 +66,10 @@ function SetupPage() {
         setDisplayName(profile.display_name ?? "");
         setBio(profile.bio ?? "");
         setAvatarUrl(profile.avatar_url ?? null);
+        setBannerUrl((profile as any).banner_url ?? null);
+        setMusicUrl((profile as any).music_url ?? null);
+        setMusicTitle((profile as any).music_title ?? "");
+        setIsPremium(Boolean((profile as any).is_premium));
       }
       const { data: linkRows } = await supabase
         .from("links")
@@ -108,6 +118,39 @@ function SetupPage() {
     toast.success("Avatar updated");
   };
 
+  const onBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!file.type.startsWith("image/")) { toast.error("Banner must be an image"); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error("Banner must be under 5MB"); return; }
+    setUploadingBanner(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${user.id}/banner-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("banners").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) { toast.error("Upload failed", { description: error.message }); setUploadingBanner(false); return; }
+    const { data } = supabase.storage.from("banners").getPublicUrl(path);
+    setBannerUrl(data.publicUrl);
+    setUploadingBanner(false);
+    toast.success("Banner uploaded");
+  };
+
+  const onMusicUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!file.type.startsWith("audio/")) { toast.error("Must be an audio file"); return; }
+    if (file.size > 8 * 1024 * 1024) { toast.error("Audio must be under 8MB"); return; }
+    setUploadingMusic(true);
+    const ext = file.name.split(".").pop() || "mp3";
+    const path = `${user.id}/music-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("music").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) { toast.error("Upload failed", { description: error.message }); setUploadingMusic(false); return; }
+    const { data } = supabase.storage.from("music").getPublicUrl(path);
+    setMusicUrl(data.publicUrl);
+    if (!musicTitle) setMusicTitle(file.name.replace(/\.[^.]+$/, ""));
+    setUploadingMusic(false);
+    toast.success("Music uploaded");
+  };
+
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -130,6 +173,9 @@ function SetupPage() {
         display_name: displayName.trim() || null,
         bio: bio.trim() || null,
         avatar_url: avatarUrl,
+        banner_url: isPremium ? bannerUrl : null,
+        music_url: isPremium ? musicUrl : null,
+        music_title: isPremium ? (musicTitle.trim() || null) : null,
       }, { onConflict: "id" });
 
     if (profileErr) {
@@ -291,6 +337,77 @@ function SetupPage() {
               />
               <div className="mt-1 text-right text-xs text-muted-foreground">{bio.length}/160</div>
             </div>
+          </div>
+
+          {/* Premium features */}
+          <div className={`rounded-2xl border p-6 shadow-card space-y-5 ${isPremium ? "border-foreground/40 bg-card-glass" : "border-dashed border-border bg-card-glass/40"}`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Crown className={`h-4 w-4 ${isPremium ? "text-foreground" : "text-muted-foreground"}`} />
+                <Label className="font-display text-base">Premium features</Label>
+              </div>
+              {isPremium ? (
+                <span className="rounded-full bg-foreground px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-background">PRO</span>
+              ) : (
+                <Link to="/premium" className="text-xs text-primary hover:underline">Upgrade →</Link>
+              )}
+            </div>
+
+            {!isPremium && (
+              <p className="text-xs text-muted-foreground">Unlock custom banners, profile music, and the animated glowing ring on your avatar.</p>
+            )}
+
+            <fieldset disabled={!isPremium} className={`space-y-5 ${!isPremium ? "opacity-50 pointer-events-none" : ""}`}>
+              <div>
+                <Label className="text-sm">Custom banner</Label>
+                <div className="mt-2 overflow-hidden rounded-xl border border-border bg-input">
+                  <div className="relative h-28 w-full bg-gradient-primary">
+                    {bannerUrl && <img src={bannerUrl} alt="" className="h-full w-full object-cover" />}
+                    <label className="absolute bottom-2 right-2 inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-background/90 px-2.5 py-1 text-xs font-medium shadow hover:bg-background">
+                      {uploadingBanner ? <Loader2 className="h-3 w-3 animate-spin" /> : <ImageIcon className="h-3 w-3" />}
+                      {bannerUrl ? "Replace" : "Upload"}
+                      <input type="file" accept="image/*" className="hidden" onChange={onBannerUpload} disabled={uploadingBanner} />
+                    </label>
+                    {bannerUrl && (
+                      <button type="button" onClick={() => setBannerUrl(null)} className="absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-background/90 text-destructive shadow hover:bg-background">
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <p className="mt-1.5 text-xs text-muted-foreground">JPG, PNG, or WebP · up to 5MB · 16:5 looks best</p>
+              </div>
+
+              <div>
+                <Label className="text-sm">Profile music</Label>
+                <div className="mt-2 flex items-center gap-2">
+                  <label className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-border bg-input px-3 text-sm hover:bg-secondary">
+                    {uploadingMusic ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Music className="h-3.5 w-3.5" />}
+                    {musicUrl ? "Replace track" : "Upload track"}
+                    <input type="file" accept="audio/*" className="hidden" onChange={onMusicUpload} disabled={uploadingMusic} />
+                  </label>
+                  {musicUrl && (
+                    <Button type="button" size="icon" variant="ghost" onClick={() => { setMusicUrl(null); setMusicTitle(""); }}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  )}
+                </div>
+                {musicUrl && (
+                  <Input
+                    placeholder="Track title"
+                    value={musicTitle}
+                    onChange={(e) => setMusicTitle(e.target.value)}
+                    className="mt-2"
+                    maxLength={60}
+                  />
+                )}
+                <p className="mt-1.5 text-xs text-muted-foreground">MP3, WAV, or OGG · up to 8MB · plays on your public profile</p>
+              </div>
+
+              <div className="rounded-lg border border-border bg-background/40 px-3 py-2 text-xs text-muted-foreground">
+                ✨ Your avatar shows the animated glowing ring automatically.
+              </div>
+            </fieldset>
           </div>
 
           <div className="rounded-2xl border border-border bg-card-glass p-6 shadow-card space-y-4">
