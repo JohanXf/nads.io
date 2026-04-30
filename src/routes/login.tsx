@@ -1,0 +1,78 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { lovable } from "@/integrations/lovable";
+import { toast } from "sonner";
+import { Sparkles, ArrowLeft } from "lucide-react";
+
+export const Route = createFileRoute("/login")({
+  component: LoginPage,
+});
+
+function LoginPage() {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const [signing, setSigning] = useState(false);
+
+  useEffect(() => {
+    if (!loading && user) navigate({ to: "/setup" });
+  }, [user, loading, navigate]);
+
+  const onGoogle = async () => {
+    setSigning(true);
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: `${window.location.origin}/setup`,
+    });
+    if (result.error) {
+      toast.error("Sign-in failed", { description: result.error.message });
+      setSigning(false);
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-hero px-4">
+      <div className="w-full max-w-md">
+        <Link to="/" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-3.5 w-3.5" /> Back
+        </Link>
+        <div className="rounded-3xl border border-border bg-card-glass p-8 shadow-3d sm:p-10">
+          <div className="flex items-center gap-2 font-display text-xl font-bold">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <span className="text-gradient">the10ksquad.io</span>
+          </div>
+
+          <h1 className="mt-6 font-display text-3xl font-bold">Welcome.</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Claim your link in 60 seconds.
+          </p>
+
+          <Button
+            onClick={onGoogle}
+            disabled={signing}
+            className="mt-8 h-12 w-full bg-white text-zinc-900 hover:bg-white/90"
+          >
+            <GoogleIcon />
+            {signing ? "Opening Google…" : "Continue with Google"}
+          </Button>
+
+          <p className="mt-6 text-center text-xs text-muted-foreground">
+            Free forever. No credit card needed.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 48 48" className="mr-2">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>
+  );
+}
+
