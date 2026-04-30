@@ -76,7 +76,7 @@ function ProfilePage() {
           {profile.is_premium && profile.banner_url && (
             <div className="relative h-32 w-full overflow-hidden">
               <img src={profile.banner_url} alt="" className="h-full w-full object-cover" />
-              <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-card/60 to-transparent" />
             </div>
           )}
           <div className={`p-8 ${profile.is_premium && profile.banner_url ? "pt-0 -mt-10 relative" : ""}`}>
