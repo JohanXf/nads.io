@@ -37,9 +37,9 @@ function LoginPage() {
           <ArrowLeft className="h-3.5 w-3.5" /> Back
         </Link>
         <div className="rounded-3xl border border-border bg-card-glass p-8 shadow-3d sm:p-10">
-          <div className="flex items-center gap-2 font-display text-xl font-bold">
-            <Sparkles className="h-5 w-5 text-primary" />
-            <span className="text-gradient">the10ksquad.io</span>
+          <div className="flex items-center gap-2 font-display text-2xl font-semibold tracking-tight">
+            <Sparkles className="h-5 w-5" />
+            <span>nads.io</span>
           </div>
 
           <h1 className="mt-6 font-display text-3xl font-bold">Welcome.</h1>

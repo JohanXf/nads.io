@@ -20,10 +20,10 @@ function Index() {
             <Sparkles className="h-3.5 w-3.5 text-primary" />
             One link. Everything you are.
           </div>
-          <h1 className="mt-6 font-display text-5xl font-bold leading-[1.05] sm:text-7xl">
+          <h1 className="mt-6 font-display text-6xl font-semibold leading-[1.02] sm:text-8xl">
             Your bio,
             <br />
-            <span className="text-gradient">one the10ksquad.io link.</span>
+            <span className="text-gradient">one nads.io link.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
             Sign in with Google, pick your username, and share every link that matters from a single page.
@@ -70,7 +70,7 @@ function Index() {
           {[
             { icon: Zap, title: "60 seconds setup", body: "Google sign-in, pick a username, you're live." },
             { icon: LinkIcon, title: "Up to 5 links", body: "Curate the links that matter most — no clutter." },
-            { icon: Sparkles, title: "Yours forever", body: "the10ksquad.io/yourname is yours. Edit anytime." },
+            { icon: Sparkles, title: "Yours forever", body: "nads.io/yourname is yours. Edit anytime." },
           ].map((f) => (
             <div key={f.title} className="rounded-2xl border border-border bg-card-glass p-6">
               <f.icon className="h-5 w-5 text-primary" />
