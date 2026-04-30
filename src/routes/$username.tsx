@@ -93,7 +93,7 @@ function ProfilePage() {
                   </span>
                 )}
               </div>
-              <h1 className="mt-3 font-display text-2xl font-bold">{profile.display_name || `@${profile.username}`}</h1>
+              <h1 className="mt-3 font-display text-2xl font-bold">{profile.display_name || profile.username}</h1>
               <p className="text-sm text-primary">@{profile.username}</p>
               {profile.bio && (
                 <p className="mt-2 max-w-sm text-center text-sm leading-relaxed text-muted-foreground">
