@@ -330,7 +330,7 @@ function MusicPlayer({ url, title }: { url: string; title: string }) {
         <span>{fmt(duration)}</span>
       </div>
 
-      <div className="mt-3 flex h-8 items-end justify-between gap-[2px]">
+      <div className="mt-3 flex h-4 items-end justify-between gap-[2px]">
         {bars.map((h, i) => (
           <span
             key={i}
