@@ -66,6 +66,10 @@ function SetupPage() {
         setDisplayName(profile.display_name ?? "");
         setBio(profile.bio ?? "");
         setAvatarUrl(profile.avatar_url ?? null);
+        setBannerUrl((profile as any).banner_url ?? null);
+        setMusicUrl((profile as any).music_url ?? null);
+        setMusicTitle((profile as any).music_title ?? "");
+        setIsPremium(Boolean((profile as any).is_premium));
       }
       const { data: linkRows } = await supabase
         .from("links")
