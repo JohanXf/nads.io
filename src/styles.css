@@ -203,4 +203,35 @@
   }
   .font-display { font-family: var(--font-display); }
   .font-mono { font-family: 'Geist Mono', ui-monospace, monospace; }
+
+  .premium-glow-ring { border-radius: 9999px; position: relative; isolation: isolate; }
+  .premium-glow-ring::before {
+    content: ""; position: absolute; inset: -6px; border-radius: 9999px; padding: 3px;
+    background: conic-gradient(from 0deg,
+      oklch(0.78 0.18 50), oklch(0.7 0.2 320), oklch(0.75 0.18 220),
+      oklch(0.82 0.16 140), oklch(0.78 0.18 50));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: premium-spin 4s linear infinite; z-index: -1;
+  }
+  .premium-glow-ring::after {
+    content: ""; position: absolute; inset: -12px; border-radius: 9999px;
+    background: conic-gradient(from 0deg,
+      oklch(0.78 0.18 50 / 0.6), oklch(0.7 0.2 320 / 0.6), oklch(0.75 0.18 220 / 0.6),
+      oklch(0.82 0.16 140 / 0.6), oklch(0.78 0.18 50 / 0.6));
+    filter: blur(16px); opacity: 0.75;
+    animation: premium-spin 6s linear infinite; z-index: -2;
+  }
+  @keyframes premium-spin { to { transform: rotate(360deg); } }
+
+  .music-pulse { animation: music-pulse-anim 1.4s ease-in-out infinite; }
+  @keyframes music-pulse-anim {
+    0%, 100% { box-shadow: 0 0 0 0 oklch(0.5 0.005 270 / 0.5), var(--shadow-glow); }
+    50% { box-shadow: 0 0 0 10px oklch(0.5 0.005 270 / 0), var(--shadow-glow); }
+  }
+  .music-bar { animation: music-bar-anim 0.9s ease-in-out infinite; transform-origin: bottom; }
+  @keyframes music-bar-anim {
+    0%, 100% { transform: scaleY(0.4); }
+    50% { transform: scaleY(1); }
+  }
 }
