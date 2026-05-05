@@ -178,7 +178,8 @@ function SetupPage() {
         banner_url: isPremium ? bannerUrl : null,
         music_url: isPremium ? musicUrl : null,
         music_title: isPremium ? (musicTitle.trim() || null) : null,
-      }, { onConflict: "id" });
+        avatar_decoration_enabled: isPremium ? avatarDecoration : true,
+      } as any, { onConflict: "id" });
 
     if (profileErr) {
       setSaving(false);
