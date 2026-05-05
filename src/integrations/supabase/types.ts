@@ -49,6 +49,24 @@ export type Database = {
           },
         ]
       }
+      profile_views: {
+        Row: {
+          created_at: string
+          ip_hash: string
+          profile_id: string
+        }
+        Insert: {
+          created_at?: string
+          ip_hash: string
+          profile_id: string
+        }
+        Update: {
+          created_at?: string
+          ip_hash?: string
+          profile_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -103,6 +121,10 @@ export type Database = {
     }
     Functions: {
       increment_profile_views: { Args: { _username: string }; Returns: number }
+      record_profile_view: {
+        Args: { _ip_hash: string; _username: string }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

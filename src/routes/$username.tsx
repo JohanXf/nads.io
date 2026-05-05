@@ -1,6 +1,7 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { recordView } from "@/server/views.functions";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight, X, Eye, Crown, Play, Pause, Music } from "lucide-react";
 
@@ -57,16 +58,16 @@ function ProfilePage() {
   const [views, setViews] = useState<number>(profile.view_count ?? 0);
 
   useEffect(() => {
-    // Avoid double-counting in a single browser session
-    const key = `viewed:${profile.username}`;
     if (typeof window === "undefined") return;
+    const key = `viewed:${profile.username}`;
     if (sessionStorage.getItem(key)) return;
     sessionStorage.setItem(key, "1");
 
-    (supabase.rpc as any)("increment_profile_views", { _username: profile.username ?? "" })
-      .then(({ data, error }: { data: number | null; error: unknown }) => {
-        if (!error && typeof data === "number") setViews(data);
-      });
+    recordView({ data: { username: profile.username ?? "" } })
+      .then((res) => {
+        if (res && typeof res.views === "number") setViews(res.views);
+      })
+      .catch(() => {});
   }, [profile.username]);
 
   return (
