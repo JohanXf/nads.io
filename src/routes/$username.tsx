@@ -9,7 +9,7 @@ export const Route = createFileRoute("/$username")({
   loader: async ({ params }) => {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("id, username, display_name, bio, avatar_url, view_count, is_premium, banner_url, music_url, music_title")
+      .select("id, username, display_name, bio, avatar_url, view_count, is_premium, banner_url, music_url, music_title, avatar_decoration_enabled")
       .eq("username", params.username.toLowerCase())
       .maybeSingle();
 
