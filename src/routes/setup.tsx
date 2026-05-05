@@ -44,6 +44,7 @@ function SetupPage() {
   const [musicUrl, setMusicUrl] = useState<string | null>(null);
   const [musicTitle, setMusicTitle] = useState("");
   const [isPremium, setIsPremium] = useState(false);
+  const [avatarDecoration, setAvatarDecoration] = useState(true);
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [uploadingMusic, setUploadingMusic] = useState(false);
   const [links, setLinks] = useState<LinkRow[]>([{ label: "", url: "" }]);
