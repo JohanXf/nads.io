@@ -69,6 +69,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_decoration_enabled: boolean
           avatar_url: string | null
           banner_url: string | null
           bio: string | null
@@ -84,6 +85,7 @@ export type Database = {
           view_count: number
         }
         Insert: {
+          avatar_decoration_enabled?: boolean
           avatar_url?: string | null
           banner_url?: string | null
           bio?: string | null
@@ -99,6 +101,7 @@ export type Database = {
           view_count?: number
         }
         Update: {
+          avatar_decoration_enabled?: boolean
           avatar_url?: string | null
           banner_url?: string | null
           bio?: string | null
