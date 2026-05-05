@@ -44,6 +44,7 @@ function SetupPage() {
   const [musicUrl, setMusicUrl] = useState<string | null>(null);
   const [musicTitle, setMusicTitle] = useState("");
   const [isPremium, setIsPremium] = useState(false);
+  const [avatarDecoration, setAvatarDecoration] = useState(true);
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [uploadingMusic, setUploadingMusic] = useState(false);
   const [links, setLinks] = useState<LinkRow[]>([{ label: "", url: "" }]);
@@ -70,6 +71,7 @@ function SetupPage() {
         setMusicUrl((profile as any).music_url ?? null);
         setMusicTitle((profile as any).music_title ?? "");
         setIsPremium(Boolean((profile as any).is_premium));
+        setAvatarDecoration((profile as any).avatar_decoration_enabled ?? true);
       }
       const { data: linkRows } = await supabase
         .from("links")
@@ -176,7 +178,8 @@ function SetupPage() {
         banner_url: isPremium ? bannerUrl : null,
         music_url: isPremium ? musicUrl : null,
         music_title: isPremium ? (musicTitle.trim() || null) : null,
-      }, { onConflict: "id" });
+        avatar_decoration_enabled: isPremium ? avatarDecoration : true,
+      } as any, { onConflict: "id" });
 
     if (profileErr) {
       setSaving(false);
@@ -359,7 +362,7 @@ function SetupPage() {
 
             <fieldset disabled={!isPremium} className={`space-y-5 ${!isPremium ? "opacity-50 pointer-events-none" : ""}`}>
               <div>
-                <Label className="text-sm">Custom banner</Label>
+                <Label className="block text-sm text-center">Custom banner</Label>
                 <div className="mt-2 overflow-hidden rounded-xl border border-border bg-input">
                   <div className="relative h-28 w-full bg-gradient-primary">
                     {bannerUrl && <img src={bannerUrl} alt="" className="h-full w-full object-cover" />}
@@ -375,22 +378,26 @@ function SetupPage() {
                     )}
                   </div>
                 </div>
-                <p className="mt-1.5 text-xs text-muted-foreground">JPG, PNG, or WebP · up to 5MB · 16:5 looks best</p>
+                <p className="mt-1.5 text-xs text-muted-foreground text-center">JPG, PNG, or WebP · up to 5MB · 16:5 looks best</p>
               </div>
 
               <div>
-                <Label className="text-sm">Profile music</Label>
-                <div className="mt-2 flex items-center gap-2">
-                  <label className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-border bg-input px-3 text-sm hover:bg-secondary">
+                <Label className="block text-sm text-center">Profile music</Label>
+                <div className="mt-2">
+                  <label className="relative flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border bg-input px-3 text-sm hover:bg-secondary">
                     {uploadingMusic ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Music className="h-3.5 w-3.5" />}
-                    {musicUrl ? "Replace track" : "Upload track"}
+                    <span>{musicUrl ? "Replace track" : "Upload track"}</span>
                     <input type="file" accept="audio/*" className="hidden" onChange={onMusicUpload} disabled={uploadingMusic} />
+                    {musicUrl && (
+                      <button
+                        type="button"
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMusicUrl(null); setMusicTitle(""); }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-background/90 text-destructive shadow hover:bg-background"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    )}
                   </label>
-                  {musicUrl && (
-                    <Button type="button" size="icon" variant="ghost" onClick={() => { setMusicUrl(null); setMusicTitle(""); }}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  )}
                 </div>
                 {musicUrl && (
                   <Input
@@ -401,14 +408,28 @@ function SetupPage() {
                     maxLength={60}
                   />
                 )}
-                <p className="mt-1.5 text-xs text-muted-foreground">MP3, WAV, or OGG · up to 8MB · plays on your public profile</p>
+                <p className="mt-1.5 text-xs text-muted-foreground text-center">MP3, WAV, or OGG · up to 8MB · plays on your public profile</p>
               </div>
 
-              <div className="rounded-lg border border-border bg-background/40 px-3 py-2 text-xs text-muted-foreground">
-                ✨ Your avatar shows the animated glowing ring automatically.
+              <div>
+                <Label className="block text-sm text-center">Avatar decoration</Label>
+                <div className="mt-2 flex items-center justify-between rounded-lg border border-border bg-background/40 px-4 py-3">
+                  <span className="text-xs text-muted-foreground">
+                    {avatarDecoration ? "Glowing ring is ON" : "Glowing ring is OFF"}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setAvatarDecoration((v) => !v)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${avatarDecoration ? "bg-foreground" : "bg-muted"}`}
+                    aria-pressed={avatarDecoration}
+                  >
+                    <span className={`inline-block h-5 w-5 transform rounded-full bg-background transition-transform ${avatarDecoration ? "translate-x-5" : "translate-x-0.5"}`} />
+                  </button>
+                </div>
               </div>
             </fieldset>
           </div>
+
 
           <div className="rounded-2xl border border-border bg-card-glass p-6 shadow-card space-y-4">
             <div className="flex items-center justify-between">

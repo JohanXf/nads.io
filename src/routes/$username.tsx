@@ -9,7 +9,7 @@ export const Route = createFileRoute("/$username")({
   loader: async ({ params }) => {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("id, username, display_name, bio, avatar_url, view_count, is_premium, banner_url, music_url, music_title")
+      .select("id, username, display_name, bio, avatar_url, view_count, is_premium, banner_url, music_url, music_title, avatar_decoration_enabled")
       .eq("username", params.username.toLowerCase())
       .maybeSingle();
 
@@ -88,7 +88,7 @@ function ProfilePage() {
           )}
           <div className={`px-6 pt-6 pb-3 ${profile.is_premium && profile.banner_url ? "pt-0 -mt-12 relative" : ""}`}>
             <div className="flex flex-col items-center">
-              <div className={`relative ${profile.is_premium ? "premium-glow-ring" : ""}`}>
+              <div className={`relative ${profile.is_premium && (profile as any).avatar_decoration_enabled !== false ? "premium-glow-ring" : ""}`}>
                 <div className="h-24 w-24 overflow-hidden rounded-full bg-gradient-primary shadow-3d-sm ring-4 ring-card">
                   {profile.avatar_url && (
                     <img src={profile.avatar_url} alt={profile.display_name ?? profile.username ?? ""} className="h-full w-full object-cover" />
