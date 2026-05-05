@@ -71,6 +71,7 @@ function SetupPage() {
         setMusicUrl((profile as any).music_url ?? null);
         setMusicTitle((profile as any).music_title ?? "");
         setIsPremium(Boolean((profile as any).is_premium));
+        setAvatarDecoration((profile as any).avatar_decoration_enabled ?? true);
       }
       const { data: linkRows } = await supabase
         .from("links")
