@@ -1,6 +1,7 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { recordView } from "@/server/views.functions";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight, X, Eye, Crown, Play, Pause, Music } from "lucide-react";
 
