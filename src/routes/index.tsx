@@ -74,15 +74,20 @@ function Index() {
                   </p>
                 </div>
 
-                <div className="mt-3 space-y-1.5">
-                  {["My website", "Twitter / X", "Latest project"].map((l) => (
-                    <div
-                      key={l}
-                      className="rounded-lg border border-border bg-background/60 px-4 py-2.5 text-sm font-medium shadow-3d-sm"
-                    >
-                      {l}
-                    </div>
-                  ))}
+                <div className="mt-3 space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    {["Link 1", "Link 2"].map((l) => (
+                      <div
+                        key={l}
+                        className="flex items-center justify-center rounded-md border border-border bg-background/50 px-3 py-2.5 text-xs font-medium shadow-3d-sm"
+                      >
+                        {l}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-center rounded-md border border-border bg-background/50 px-3 py-2.5 text-xs font-medium shadow-3d-sm">
+                    Link 3
+                  </div>
                 </div>
               </div>
             </div>
