@@ -131,23 +131,30 @@ function ProfilePage() {
 
 
         {showClaim && (
-          <div className="relative mt-10 w-full rounded-2xl border border-border bg-card-glass p-5 text-center shadow-3d-sm">
+          <Link
+            to="/login"
+            className="group fixed bottom-5 left-1/2 z-50 flex w-[min(92%,360px)] -translate-x-1/2 items-center gap-3 rounded-full border border-border bg-card/95 px-4 py-2.5 shadow-3d backdrop-blur-md"
+          >
+            <span className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-full bg-background/60 text-primary">
+              <Sparkles className="h-4 w-4" />
+            </span>
+            <span className="min-w-0 flex-1 text-left">
+              <span className="block truncate text-sm font-semibold leading-tight">nads.io/you</span>
+              <span className="block truncate text-xs leading-tight text-muted-foreground">Claim your free profile!</span>
+            </span>
             <button
               type="button"
-              onClick={() => setShowClaim(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowClaim(false);
+              }}
               aria-label="Dismiss"
-              className="absolute right-3 top-3 inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition hover:bg-background/60 hover:text-foreground"
+              className="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full text-muted-foreground transition hover:bg-background/60 hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </button>
-            <p className="font-display text-lg font-semibold">Want your own nads.io link?</p>
-            <p className="mt-1 text-xs text-muted-foreground">Free forever · 60 seconds to set up</p>
-            <Link to="/login" className="mt-4 inline-block">
-              <Button className="h-11 bg-gradient-primary px-6 shadow-glow">
-                Claim your username <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
+          </Link>
         )}
 
         <Link
