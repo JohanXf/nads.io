@@ -58,6 +58,12 @@ function ProfilePage() {
   const [views, setViews] = useState<number>(profile.view_count ?? 0);
 
   useEffect(() => {
+    if (!showClaim) return;
+    const t = setTimeout(() => setShowClaim(false), 5000);
+    return () => clearTimeout(t);
+  }, [showClaim]);
+
+  useEffect(() => {
     if (typeof window === "undefined") return;
     const key = `viewed:${profile.username}`;
     if (sessionStorage.getItem(key)) return;
