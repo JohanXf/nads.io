@@ -52,11 +52,11 @@
 :root {
   --radius: 1rem;
   /* Neutral monochrome theme based on #A1A1A0 */
-  --background: oklch(0.985 0 0);
+  --background: oklch(0.93 0.002 270);
   --foreground: oklch(0.18 0.005 270);
-  --card: oklch(0.98 0 0);
+  --card: oklch(0.95 0.002 270);
   --card-foreground: oklch(0.18 0.005 270);
-  --popover: oklch(0.98 0 0);
+  --popover: oklch(0.95 0.002 270);
   --popover-foreground: oklch(0.18 0.005 270);
   /* #A1A1A0 ≈ oklch(0.685 0.002 270) */
   --primary: oklch(0.685 0.002 270);
