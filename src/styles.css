@@ -47,41 +47,40 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Cabin:wght@400;500;600;700&family=Geist+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;600&display=swap');
 
 :root {
   --radius: 1rem;
-  /* Neutral monochrome theme based on #A1A1A0 */
-  --background: oklch(0.93 0.002 270);
-  --foreground: oklch(0.18 0.005 270);
-  --card: oklch(0.95 0.002 270);
-  --card-foreground: oklch(0.18 0.005 270);
-  --popover: oklch(0.95 0.002 270);
-  --popover-foreground: oklch(0.18 0.005 270);
-  /* #A1A1A0 ≈ oklch(0.685 0.002 270) */
-  --primary: oklch(0.685 0.002 270);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.94 0.002 270);
-  --secondary-foreground: oklch(0.22 0.005 270);
-  --muted: oklch(0.95 0.002 270);
-  --muted-foreground: oklch(0.48 0.005 270);
-  --accent: oklch(0.78 0.003 270);
-  --accent-foreground: oklch(0.18 0.005 270);
-  --destructive: oklch(0.55 0.22 25);
+  /* Dark monochrome theme inspired by Cera CY reference */
+  --background: oklch(0.22 0.003 270);
+  --foreground: oklch(0.96 0.002 270);
+  --card: oklch(0.26 0.003 270);
+  --card-foreground: oklch(0.96 0.002 270);
+  --popover: oklch(0.26 0.003 270);
+  --popover-foreground: oklch(0.96 0.002 270);
+  --primary: oklch(0.92 0.002 270);
+  --primary-foreground: oklch(0.18 0.003 270);
+  --secondary: oklch(0.30 0.003 270);
+  --secondary-foreground: oklch(0.96 0.002 270);
+  --muted: oklch(0.28 0.003 270);
+  --muted-foreground: oklch(0.72 0.003 270);
+  --accent: oklch(0.40 0.003 270);
+  --accent-foreground: oklch(0.96 0.002 270);
+  --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(0.99 0.005 0);
-  --border: oklch(0.88 0.003 270);
-  --input: oklch(0.96 0.002 270);
-  --ring: oklch(0.685 0.002 270);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.92 0.002 270);
 
-  --primary-glow: oklch(0.82 0.002 270);
-  --gradient-hero: radial-gradient(ellipse at top, oklch(0.94 0.002 270) 0%, oklch(0.985 0 0) 60%);
-  --gradient-primary: linear-gradient(135deg, oklch(0.55 0.005 270), oklch(0.72 0.003 270));
-  --gradient-card: linear-gradient(180deg, oklch(0.99 0 0 / 0.85), oklch(0.96 0.002 270 / 0.7));
-  --shadow-glow: 0 0 60px -10px oklch(0.5 0.005 270 / 0.35);
-  --shadow-card: 0 24px 80px -20px oklch(0.3 0.005 270 / 0.18);
+  --primary-glow: oklch(0.98 0.002 270);
+  --gradient-hero: radial-gradient(ellipse at top, oklch(0.30 0.003 270) 0%, oklch(0.18 0.003 270) 60%);
+  --gradient-primary: linear-gradient(135deg, oklch(0.85 0.002 270), oklch(0.55 0.003 270));
+  --gradient-card: linear-gradient(180deg, oklch(0.28 0.003 270 / 0.8), oklch(0.22 0.003 270 / 0.6));
+  --shadow-glow: 0 0 60px -10px oklch(0.05 0 0 / 0.55);
+  --shadow-card: 0 24px 80px -20px oklch(0.05 0 0 / 0.5);
 
-  --font-display: 'Oswald', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Cabin', system-ui, -apple-system, sans-serif;
+  --font-display: 'Jost', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Jost', system-ui, -apple-system, sans-serif;
 
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
