@@ -178,21 +178,23 @@
   }
   .bg-gradient-primary { background: var(--gradient-primary); }
 
-  /* Inverted tile: black on white light, white on black dark */
+  /* Raised neumorphic tile: soft white surface with dual shadows */
   .bg-card-glass {
-    background: oklch(0.12 0 0);
-    color: oklch(0.98 0 0);
+    background: linear-gradient(145deg, oklch(1 0 0), oklch(0.94 0.002 270));
+    color: var(--foreground);
     border-color: transparent !important;
     box-shadow:
-      0 12px 32px oklch(0 0 0 / 0.18),
-      0 2px 6px oklch(0 0 0 / 0.10);
+      10px 10px 24px oklch(0.55 0.005 270 / 0.22),
+      -8px -8px 20px oklch(1 0 0 / 0.95),
+      inset 1px 1px 0 oklch(1 0 0 / 0.7);
   }
   .dark .bg-card-glass {
-    background: oklch(0.98 0 0);
-    color: oklch(0.12 0 0);
+    background: linear-gradient(145deg, oklch(0.26 0.003 270), oklch(0.18 0.003 270));
+    color: var(--foreground);
     box-shadow:
-      0 12px 32px oklch(0 0 0 / 0.55),
-      0 2px 6px oklch(0 0 0 / 0.4);
+      10px 10px 24px oklch(0 0 0 / 0.6),
+      -8px -8px 20px oklch(0.32 0.003 270 / 0.5),
+      inset 1px 1px 0 oklch(1 0 0 / 0.04);
   }
 
   .shadow-glow { box-shadow: var(--shadow-glow); }
@@ -204,22 +206,34 @@
     color: transparent;
   }
   .shadow-3d {
-    box-shadow: 0 14px 36px oklch(0 0 0 / 0.20), 0 2px 6px oklch(0 0 0 / 0.10);
+    box-shadow:
+      8px 8px 20px oklch(0.55 0.005 270 / 0.22),
+      -6px -6px 16px oklch(1 0 0 / 0.9);
   }
   .dark .shadow-3d {
-    box-shadow: 0 14px 36px oklch(0 0 0 / 0.6), 0 2px 6px oklch(0 0 0 / 0.4);
+    box-shadow:
+      8px 8px 20px oklch(0 0 0 / 0.6),
+      -6px -6px 16px oklch(0.32 0.003 270 / 0.45);
   }
   .shadow-3d-sm {
-    box-shadow: 0 6px 16px oklch(0 0 0 / 0.15);
+    box-shadow:
+      4px 4px 10px oklch(0.55 0.005 270 / 0.20),
+      -3px -3px 8px oklch(1 0 0 / 0.9);
   }
   .dark .shadow-3d-sm {
-    box-shadow: 0 6px 16px oklch(0 0 0 / 0.5);
+    box-shadow:
+      4px 4px 10px oklch(0 0 0 / 0.55),
+      -3px -3px 8px oklch(0.32 0.003 270 / 0.4);
   }
   .shadow-neu-inset {
-    box-shadow: inset 0 2px 8px oklch(0 0 0 / 0.2);
+    box-shadow:
+      inset 4px 4px 8px oklch(0.55 0.005 270 / 0.22),
+      inset -3px -3px 6px oklch(1 0 0 / 0.9);
   }
   .dark .shadow-neu-inset {
-    box-shadow: inset 0 2px 8px oklch(0 0 0 / 0.5);
+    box-shadow:
+      inset 4px 4px 8px oklch(0 0 0 / 0.55),
+      inset -3px -3px 6px oklch(0.32 0.003 270 / 0.4);
   }
   .font-display { font-family: var(--font-display); }
   .font-mono { font-family: 'Geist Mono', ui-monospace, monospace; }
