@@ -170,13 +170,31 @@
 }
 
 @layer utilities {
-  .bg-hero { background: var(--gradient-hero); }
-  .bg-gradient-primary { background: var(--gradient-primary); }
-  .bg-card-glass {
-    background: var(--gradient-card);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+  .bg-hero {
+    background:
+      radial-gradient(ellipse at top left, oklch(0.99 0.001 270) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom right, oklch(0.92 0.003 270) 0%, transparent 70%),
+      var(--background);
   }
+  .bg-gradient-primary { background: var(--gradient-primary); }
+
+  /* Neumorphic raised tile */
+  .bg-card-glass {
+    background: linear-gradient(145deg, oklch(1 0 0), oklch(0.94 0.002 270));
+    border-color: transparent !important;
+    box-shadow:
+      8px 8px 20px oklch(0.78 0.005 270 / 0.45),
+      -8px -8px 20px oklch(1 0 0 / 0.95),
+      inset 1px 1px 0 oklch(1 0 0 / 0.6);
+  }
+  .dark .bg-card-glass {
+    background: linear-gradient(145deg, oklch(0.24 0.01 60), oklch(0.18 0.008 60));
+    box-shadow:
+      8px 8px 20px oklch(0.08 0.005 60 / 0.7),
+      -8px -8px 20px oklch(0.30 0.012 60 / 0.4),
+      inset 1px 1px 0 oklch(0.40 0.012 60 / 0.3);
+  }
+
   .shadow-glow { box-shadow: var(--shadow-glow); }
   .shadow-card { box-shadow: var(--shadow-card); }
   .text-gradient {
@@ -187,21 +205,34 @@
   }
   .shadow-3d {
     box-shadow:
-      0 1px 0 0 oklch(1 0 0 / 0.5) inset,
-      0 -1px 0 0 oklch(0.3 0.005 270 / 0.15) inset,
-      0 2px 0 0 oklch(0.6 0.003 270),
-      0 4px 0 0 oklch(0.5 0.003 270),
-      0 6px 0 0 oklch(0.42 0.003 270),
-      0 12px 30px -8px oklch(0.3 0.005 270 / 0.3);
-    transform: translateZ(0);
+      6px 6px 16px oklch(0.78 0.005 270 / 0.5),
+      -6px -6px 16px oklch(1 0 0 / 0.95),
+      inset 1px 1px 0 oklch(1 0 0 / 0.4);
+  }
+  .dark .shadow-3d {
+    box-shadow:
+      6px 6px 16px oklch(0.08 0.005 60 / 0.75),
+      -6px -6px 16px oklch(0.32 0.012 60 / 0.35);
   }
   .shadow-3d-sm {
     box-shadow:
-      0 1px 0 0 oklch(1 0 0 / 0.4) inset,
-      0 -1px 0 0 oklch(0.3 0.005 270 / 0.12) inset,
-      0 2px 0 0 oklch(0.7 0.003 270),
-      0 4px 0 0 oklch(0.6 0.003 270),
-      0 8px 16px -6px oklch(0.3 0.005 270 / 0.22);
+      4px 4px 10px oklch(0.78 0.005 270 / 0.4),
+      -4px -4px 10px oklch(1 0 0 / 0.9);
+  }
+  .dark .shadow-3d-sm {
+    box-shadow:
+      4px 4px 10px oklch(0.08 0.005 60 / 0.6),
+      -4px -4px 10px oklch(0.30 0.012 60 / 0.3);
+  }
+  .shadow-neu-inset {
+    box-shadow:
+      inset 4px 4px 8px oklch(0.78 0.005 270 / 0.45),
+      inset -4px -4px 8px oklch(1 0 0 / 0.9);
+  }
+  .dark .shadow-neu-inset {
+    box-shadow:
+      inset 4px 4px 8px oklch(0.08 0.005 60 / 0.7),
+      inset -4px -4px 8px oklch(0.30 0.012 60 / 0.35);
   }
   .font-display { font-family: var(--font-display); }
   .font-mono { font-family: 'Geist Mono', ui-monospace, monospace; }
