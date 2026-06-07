@@ -7,8 +7,8 @@ import { Sparkles, ArrowRight, X, Eye, Crown, Play, Pause, Music } from "lucide-
 
 export const Route = createFileRoute("/$username")({
   loader: async ({ params }) => {
-    const { data: profile } = await supabase
-      .from("profiles")
+    const { data: profile } = await (supabase
+      .from("profiles") as any)
       .select("id, username, display_name, bio, avatar_url, view_count, is_premium, banner_url, music_url, music_title, video_url, avatar_decoration_enabled")
       .eq("username", params.username.toLowerCase())
       .maybeSingle();
