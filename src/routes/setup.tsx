@@ -43,10 +43,12 @@ function SetupPage() {
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
   const [musicUrl, setMusicUrl] = useState<string | null>(null);
   const [musicTitle, setMusicTitle] = useState("");
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [avatarDecoration, setAvatarDecoration] = useState(true);
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [uploadingMusic, setUploadingMusic] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const [links, setLinks] = useState<LinkRow[]>([{ label: "", url: "" }]);
   const [usernameError, setUsernameError] = useState("");
 
@@ -70,6 +72,7 @@ function SetupPage() {
         setBannerUrl((profile as any).banner_url ?? null);
         setMusicUrl((profile as any).music_url ?? null);
         setMusicTitle((profile as any).music_title ?? "");
+        setVideoUrl((profile as any).video_url ?? null);
         setIsPremium(Boolean((profile as any).is_premium));
         setAvatarDecoration((profile as any).avatar_decoration_enabled ?? true);
       }
@@ -153,7 +156,23 @@ function SetupPage() {
     toast.success("Music uploaded");
   };
 
-  const onSubmit = async (e: FormEvent) => {
+  const onVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!file.type.startsWith("video/")) { toast.error("Must be a video file"); return; }
+    if (file.size > 20 * 1024 * 1024) { toast.error("Video must be under 20MB"); return; }
+    setUploadingVideo(true);
+    const ext = file.name.split(".").pop() || "mp4";
+    const path = `${user.id}/video-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("videos").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) { toast.error("Upload failed", { description: error.message }); setUploadingVideo(false); return; }
+    const { data } = supabase.storage.from("videos").getPublicUrl(path);
+    setVideoUrl(data.publicUrl);
+    setUploadingVideo(false);
+    toast.success("Video uploaded");
+  };
+
+
     e.preventDefault();
     if (!user) return;
 
