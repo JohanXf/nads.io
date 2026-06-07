@@ -432,6 +432,29 @@ function SetupPage() {
               </div>
 
               <div>
+                <Label className="block text-sm text-center">Background video (9:16)</Label>
+                <div className="mt-2 overflow-hidden rounded-xl border border-border bg-input">
+                  <div className="relative mx-auto aspect-[9/16] w-40 bg-gradient-primary">
+                    {videoUrl && (
+                      <video src={videoUrl} className="h-full w-full object-cover" autoPlay loop muted playsInline />
+                    )}
+                    <label className="absolute bottom-2 right-2 inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-background/90 px-2.5 py-1 text-xs font-medium shadow hover:bg-background">
+                      {uploadingVideo ? <Loader2 className="h-3 w-3 animate-spin" /> : <Video className="h-3 w-3" />}
+                      {videoUrl ? "Replace" : "Upload"}
+                      <input type="file" accept="video/*" className="hidden" onChange={onVideoUpload} disabled={uploadingVideo} />
+                    </label>
+                    {videoUrl && (
+                      <button type="button" onClick={() => setVideoUrl(null)} className="absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-background/90 text-destructive shadow hover:bg-background">
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <p className="mt-1.5 text-xs text-muted-foreground text-center">MP4 or WebM · up to 20MB · plays as full background</p>
+              </div>
+
+
+              <div>
                 <Label className="block text-sm text-center">Avatar decoration</Label>
                 <div className="mt-2 flex items-center justify-between rounded-lg border border-border bg-background/40 px-4 py-3">
                   <span className="text-xs text-muted-foreground">
