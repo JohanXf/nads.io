@@ -1,8 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { lovable } from "@/integrations/lovable";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Sparkles, ArrowLeft } from "lucide-react";
 
@@ -14,6 +17,10 @@ function LoginPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [signing, setSigning] = useState(false);
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/setup" });
@@ -30,8 +37,34 @@ function LoginPage() {
     }
   };
 
+  const onEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    setBusy(true);
+    try {
+      if (mode === "signup") {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { emailRedirectTo: `${window.location.origin}/setup` },
+        });
+        if (error) throw error;
+        toast.success("Account created");
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+      }
+    } catch (err: any) {
+      toast.error(mode === "signup" ? "Sign-up failed" : "Sign-in failed", {
+        description: err?.message,
+      });
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-hero px-4">
+    <div className="flex min-h-screen items-center justify-center bg-hero px-4 py-10">
       <div className="w-full max-w-md">
         <Link to="/" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-3.5 w-3.5" /> Back
@@ -42,7 +75,9 @@ function LoginPage() {
             <span>nads.io</span>
           </div>
 
-          <h1 className="mt-6 font-display text-3xl font-bold">Welcome.</h1>
+          <h1 className="mt-6 font-display text-3xl font-bold">
+            {mode === "signup" ? "Create account." : "Welcome."}
+          </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Claim your link in 60 seconds.
           </p>
@@ -55,6 +90,52 @@ function LoginPage() {
             <GoogleIcon />
             {signing ? "Opening Google…" : "Continue with Google"}
           </Button>
+
+          <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
+            <div className="h-px flex-1 bg-border" />
+            <span>or</span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
+          <form onSubmit={onEmail} className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                minLength={6}
+                required
+              />
+            </div>
+            <Button type="submit" disabled={busy} className="h-11 w-full">
+              {busy ? "Please wait…" : mode === "signup" ? "Create account" : "Sign in"}
+            </Button>
+          </form>
+
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            {mode === "signup" ? "Already have an account?" : "New here?"}{" "}
+            <button
+              type="button"
+              onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
+              className="font-medium text-foreground underline underline-offset-2"
+            >
+              {mode === "signup" ? "Sign in" : "Create account"}
+            </button>
+          </p>
 
           <p className="mt-6 text-center text-xs text-muted-foreground">
             Free forever. No credit card needed.
@@ -75,4 +156,3 @@ function GoogleIcon() {
     </svg>
   );
 }
-
