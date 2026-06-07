@@ -8,7 +8,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Plus, Trash2, Upload, ExternalLink, Loader2, Crown, Image as ImageIcon, Music } from "lucide-react";
+import { Plus, Trash2, Upload, ExternalLink, Loader2, Crown, Image as ImageIcon, Music, Video } from "lucide-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/setup")({
@@ -43,10 +43,12 @@ function SetupPage() {
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
   const [musicUrl, setMusicUrl] = useState<string | null>(null);
   const [musicTitle, setMusicTitle] = useState("");
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [avatarDecoration, setAvatarDecoration] = useState(true);
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [uploadingMusic, setUploadingMusic] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const [links, setLinks] = useState<LinkRow[]>([{ label: "", url: "" }]);
   const [usernameError, setUsernameError] = useState("");
 
@@ -70,6 +72,7 @@ function SetupPage() {
         setBannerUrl((profile as any).banner_url ?? null);
         setMusicUrl((profile as any).music_url ?? null);
         setMusicTitle((profile as any).music_title ?? "");
+        setVideoUrl((profile as any).video_url ?? null);
         setIsPremium(Boolean((profile as any).is_premium));
         setAvatarDecoration((profile as any).avatar_decoration_enabled ?? true);
       }
@@ -153,6 +156,22 @@ function SetupPage() {
     toast.success("Music uploaded");
   };
 
+  const onVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!file.type.startsWith("video/")) { toast.error("Must be a video file"); return; }
+    if (file.size > 20 * 1024 * 1024) { toast.error("Video must be under 20MB"); return; }
+    setUploadingVideo(true);
+    const ext = file.name.split(".").pop() || "mp4";
+    const path = `${user.id}/video-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("videos").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) { toast.error("Upload failed", { description: error.message }); setUploadingVideo(false); return; }
+    const { data } = supabase.storage.from("videos").getPublicUrl(path);
+    setVideoUrl(data.publicUrl);
+    setUploadingVideo(false);
+    toast.success("Video uploaded");
+  };
+
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -178,6 +197,7 @@ function SetupPage() {
         banner_url: isPremium ? bannerUrl : null,
         music_url: isPremium ? musicUrl : null,
         music_title: isPremium ? (musicTitle.trim() || null) : null,
+        video_url: isPremium ? videoUrl : null,
         avatar_decoration_enabled: isPremium ? avatarDecoration : true,
       } as any, { onConflict: "id" });
 
@@ -410,6 +430,29 @@ function SetupPage() {
                 )}
                 <p className="mt-1.5 text-xs text-muted-foreground text-center">MP3, WAV, or OGG · up to 8MB · plays on your public profile</p>
               </div>
+
+              <div>
+                <Label className="block text-sm text-center">Background video (9:16)</Label>
+                <div className="mt-2 overflow-hidden rounded-xl border border-border bg-input">
+                  <div className="relative mx-auto aspect-[9/16] w-40 bg-gradient-primary">
+                    {videoUrl && (
+                      <video src={videoUrl} className="h-full w-full object-cover" autoPlay loop muted playsInline />
+                    )}
+                    <label className="absolute bottom-2 right-2 inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-background/90 px-2.5 py-1 text-xs font-medium shadow hover:bg-background">
+                      {uploadingVideo ? <Loader2 className="h-3 w-3 animate-spin" /> : <Video className="h-3 w-3" />}
+                      {videoUrl ? "Replace" : "Upload"}
+                      <input type="file" accept="video/*" className="hidden" onChange={onVideoUpload} disabled={uploadingVideo} />
+                    </label>
+                    {videoUrl && (
+                      <button type="button" onClick={() => setVideoUrl(null)} className="absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-background/90 text-destructive shadow hover:bg-background">
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <p className="mt-1.5 text-xs text-muted-foreground text-center">MP4 or WebM · up to 20MB · plays as full background</p>
+              </div>
+
 
               <div>
                 <Label className="block text-sm text-center">Avatar decoration</Label>

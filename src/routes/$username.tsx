@@ -7,9 +7,9 @@ import { Sparkles, ArrowRight, X, Eye, Crown, Play, Pause, Music } from "lucide-
 
 export const Route = createFileRoute("/$username")({
   loader: async ({ params }) => {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("id, username, display_name, bio, avatar_url, view_count, is_premium, banner_url, music_url, music_title, avatar_decoration_enabled")
+    const { data: profile } = await (supabase
+      .from("profiles") as any)
+      .select("id, username, display_name, bio, avatar_url, view_count, is_premium, banner_url, music_url, music_title, video_url, avatar_decoration_enabled")
       .eq("username", params.username.toLowerCase())
       .maybeSingle();
 
@@ -76,9 +76,24 @@ function ProfilePage() {
       .catch(() => {});
   }, [profile.username]);
 
+  const hasVideoBg = profile.is_premium && (profile as any).video_url;
+
   return (
-    <div className="min-h-screen bg-hero">
-      <main className="mx-auto flex max-w-md flex-col items-center px-5 pt-10 pb-12">
+    <div className="relative min-h-screen bg-hero">
+      {hasVideoBg && (
+        <>
+          <video
+            src={(profile as any).video_url}
+            className="fixed inset-0 h-full w-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+          <div className="fixed inset-0 bg-black/40" />
+        </>
+      )}
+      <main className="relative mx-auto flex max-w-md flex-col items-center px-5 pt-10 pb-12">
         <div className="mb-2 inline-flex items-center gap-1 rounded-full border border-border bg-card-glass px-2 py-0.5 text-[9px] shadow-3d-sm">
           <Eye className="h-2.5 w-2.5 text-primary" />
           <span className="font-semibold tabular-nums">{views.toLocaleString()}</span>
