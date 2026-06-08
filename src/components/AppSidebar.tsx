@@ -27,9 +27,9 @@ export function SidebarTrigger({ onClick, open }: { onClick: () => void; open: b
     <button
       onClick={onClick}
       aria-label={open ? "Close menu" : "Open menu"}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card-glass transition hover:bg-accent/40"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground transition hover:bg-accent/50"
     >
-      {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+      {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
     </button>
   );
 }
