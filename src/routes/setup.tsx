@@ -203,6 +203,7 @@ function SetupPage() {
 
     if (profileErr) {
       setSaving(false);
+      console.error("[setup] profile save error", profileErr);
       if (profileErr.code === "23505") {
         setUsernameError("That username is taken.");
       } else if (
@@ -210,10 +211,17 @@ function SetupPage() {
         /once every 7 days/i.test(profileErr.message)
       ) {
         setUsernameError(
-          profileErr.message.replace(/^.*?Username/i, "Username")
+          /Username can only be changed.*/i.exec(profileErr.message)?.[0] ??
+            "Username can only be changed once every 7 days."
         );
+      } else if (/premium required/i.test(profileErr.message)) {
+        toast.error("Premium required", {
+          description: "Upgrade to Premium to use banner, music, or video.",
+        });
       } else {
-        toast.error("Couldn't save", { description: profileErr.message });
+        toast.error("Couldn't save", {
+          description: "Something went wrong. Please try again.",
+        });
       }
       return;
     }
