@@ -123,7 +123,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      increment_profile_views: { Args: { _username: string }; Returns: number }
       record_profile_view: {
         Args: { _ip_hash: string; _username: string }
         Returns: number
