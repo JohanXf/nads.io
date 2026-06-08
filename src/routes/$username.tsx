@@ -187,9 +187,10 @@ function ProfilePage() {
 type LinkItem = { id: string; label: string; url: string };
 
 function LinkTile({ link, className = "" }: { link: LinkItem; className?: string }) {
+  const safeUrl = /^https?:\/\//i.test(link.url) ? link.url : "#";
   return (
     <a
-      href={link.url}
+      href={safeUrl}
       target="_blank"
       rel="noopener noreferrer"
       className={`group flex items-center justify-center rounded-md border border-border bg-background/50 px-3 py-2.5 text-xs font-medium shadow-3d-sm transition-all hover:-translate-y-0.5 hover:border-primary ${className}`}
