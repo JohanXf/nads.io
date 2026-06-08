@@ -242,7 +242,10 @@ function SetupPage() {
         }))
       );
       if (linkErr) {
-        toast.error("Couldn't save links", { description: linkErr.message });
+        console.error("[setup] link save error", linkErr);
+        toast.error("Couldn't save links", {
+          description: "Something went wrong. Please try again.",
+        });
         setSaving(false);
         return;
       }
