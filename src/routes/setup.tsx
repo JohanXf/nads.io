@@ -113,7 +113,7 @@ function SetupPage() {
       contentType: file.type,
     });
     if (error) {
-      toast.error("Upload failed", { description: error.message });
+      (console.error("[setup] upload error", error), toast.error("Upload failed", { description: "Please try again." }));
       setUploading(false);
       return;
     }
@@ -132,7 +132,7 @@ function SetupPage() {
     const ext = file.name.split(".").pop() || "jpg";
     const path = `${user.id}/banner-${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from("banners").upload(path, file, { upsert: true, contentType: file.type });
-    if (error) { toast.error("Upload failed", { description: error.message }); setUploadingBanner(false); return; }
+    if (error) { (console.error("[setup] upload error", error), toast.error("Upload failed", { description: "Please try again." })); setUploadingBanner(false); return; }
     const { data } = supabase.storage.from("banners").getPublicUrl(path);
     setBannerUrl(data.publicUrl);
     setUploadingBanner(false);
@@ -148,7 +148,7 @@ function SetupPage() {
     const ext = file.name.split(".").pop() || "mp3";
     const path = `${user.id}/music-${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from("music").upload(path, file, { upsert: true, contentType: file.type });
-    if (error) { toast.error("Upload failed", { description: error.message }); setUploadingMusic(false); return; }
+    if (error) { (console.error("[setup] upload error", error), toast.error("Upload failed", { description: "Please try again." })); setUploadingMusic(false); return; }
     const { data } = supabase.storage.from("music").getPublicUrl(path);
     setMusicUrl(data.publicUrl);
     if (!musicTitle) setMusicTitle(file.name.replace(/\.[^.]+$/, ""));
@@ -165,7 +165,7 @@ function SetupPage() {
     const ext = file.name.split(".").pop() || "mp4";
     const path = `${user.id}/video-${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from("videos").upload(path, file, { upsert: true, contentType: file.type });
-    if (error) { toast.error("Upload failed", { description: error.message }); setUploadingVideo(false); return; }
+    if (error) { (console.error("[setup] upload error", error), toast.error("Upload failed", { description: "Please try again." })); setUploadingVideo(false); return; }
     const { data } = supabase.storage.from("videos").getPublicUrl(path);
     setVideoUrl(data.publicUrl);
     setUploadingVideo(false);
@@ -203,6 +203,7 @@ function SetupPage() {
 
     if (profileErr) {
       setSaving(false);
+      console.error("[setup] profile save error", profileErr);
       if (profileErr.code === "23505") {
         setUsernameError("That username is taken.");
       } else if (
@@ -210,10 +211,17 @@ function SetupPage() {
         /once every 7 days/i.test(profileErr.message)
       ) {
         setUsernameError(
-          profileErr.message.replace(/^.*?Username/i, "Username")
+          /Username can only be changed.*/i.exec(profileErr.message)?.[0] ??
+            "Username can only be changed once every 7 days."
         );
+      } else if (/premium required/i.test(profileErr.message)) {
+        toast.error("Premium required", {
+          description: "Upgrade to Premium to use banner, music, or video.",
+        });
       } else {
-        toast.error("Couldn't save", { description: profileErr.message });
+        toast.error("Couldn't save", {
+          description: "Something went wrong. Please try again.",
+        });
       }
       return;
     }
@@ -234,7 +242,10 @@ function SetupPage() {
         }))
       );
       if (linkErr) {
-        toast.error("Couldn't save links", { description: linkErr.message });
+        console.error("[setup] link save error", linkErr);
+        toast.error("Couldn't save links", {
+          description: "Something went wrong. Please try again.",
+        });
         setSaving(false);
         return;
       }
