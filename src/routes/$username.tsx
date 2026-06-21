@@ -2,8 +2,8 @@ import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { recordView } from "@/lib/views.functions";
-import { Button } from "@/components/ui/button";
-import { Sparkles, ArrowRight, X, Eye, Crown, Play, Pause, Music } from "lucide-react";
+
+import { Sparkles, Eye, Crown, Play, Pause, Music } from "lucide-react";
 
 export const Route = createFileRoute("/$username")({
   loader: async ({ params }) => {
@@ -54,14 +54,8 @@ export const Route = createFileRoute("/$username")({
 
 function ProfilePage() {
   const { profile, links } = Route.useLoaderData();
-  const [showClaim, setShowClaim] = useState(true);
   const [views, setViews] = useState<number>(profile.view_count ?? 0);
 
-  useEffect(() => {
-    if (!showClaim) return;
-    const t = setTimeout(() => setShowClaim(false), 5000);
-    return () => clearTimeout(t);
-  }, [showClaim]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -145,32 +139,6 @@ function ProfilePage() {
         )}
 
 
-        {showClaim && (
-          <Link
-            to="/login"
-            className="group fixed bottom-5 left-1/2 z-50 flex w-[min(92%,360px)] -translate-x-1/2 items-center gap-3 rounded-full border border-border bg-card/95 px-4 py-2.5 shadow-3d backdrop-blur-md"
-          >
-            <span className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-full bg-background/60 text-primary">
-              <Sparkles className="h-4 w-4" />
-            </span>
-            <span className="min-w-0 flex-1 text-left">
-              <span className="block truncate text-sm font-semibold leading-tight">nads.io/you</span>
-              <span className="block truncate text-xs leading-tight text-muted-foreground">Claim your free profile!</span>
-            </span>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setShowClaim(false);
-              }}
-              aria-label="Dismiss"
-              className="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full text-muted-foreground transition hover:bg-background/60 hover:text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </Link>
-        )}
 
         <Link
           to="/"

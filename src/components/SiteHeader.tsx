@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { AppSidebar, SidebarTrigger } from "@/components/AppSidebar";
 
 export function SiteHeader() {
-  const { user, signOut } = useAuth();
   const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -26,15 +24,6 @@ export function SiteHeader() {
             <Button size="icon" variant="ghost" onClick={toggle} aria-label="Toggle theme" className="rounded-full">
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
-            {user ? (
-              <Button size="sm" variant="ghost" onClick={() => signOut()} className="rounded-full">
-                Sign out
-              </Button>
-            ) : (
-              <Link to="/login">
-                <Button size="sm" className="rounded-full bg-primary text-primary-foreground shadow-3d-sm">Get started</Button>
-              </Link>
-            )}
           </nav>
         </div>
       </header>

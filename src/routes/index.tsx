@@ -1,21 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/SiteHeader";
-import { useAuth } from "@/context/AuthContext";
-import { ArrowRight, Link as LinkIcon, Sparkles, Zap, Pencil, Crown, Eye, Music, BarChart3 } from "lucide-react";
+import { LinkIcon, Sparkles, Zap, Eye } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
-  const { user } = useAuth();
-
   return (
     <div className="min-h-screen bg-hero">
       <SiteHeader />
       <main className="mx-auto max-w-5xl px-5 pt-14 pb-24 sm:pt-20">
-        {/* HERO */}
         <section className="text-center">
           <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card-glass px-3 py-1 text-[11px] text-muted-foreground shadow-3d-sm">
             <Sparkles className="h-3 w-3 text-primary" />
@@ -29,28 +24,9 @@ function Index() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-lg text-sm text-muted-foreground sm:text-base">
-            Sign in, pick your username, and share every link that matters from one
-            beautifully simple page.
+            Browse beautifully simple bio link pages on nads.io.
           </p>
 
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            {user ? (
-              <Link to="/setup">
-                <Button size="lg" className="h-11 rounded-xl bg-gradient-primary px-7 text-sm font-semibold shadow-3d">
-                  <Pencil className="mr-2 h-4 w-4" /> Edit your profile
-                </Button>
-              </Link>
-            ) : (
-              <Link to="/login">
-                <Button size="lg" className="h-11 rounded-xl bg-gradient-primary px-7 text-sm font-semibold shadow-3d">
-                  Claim your link <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            )}
-            <span className="text-[11px] text-muted-foreground">Free forever · No card required</span>
-          </div>
-
-          {/* PROFILE PREVIEW MOCK */}
           <div className="mx-auto mt-14 w-full max-w-sm">
             <div className="mb-2 inline-flex items-center gap-1 rounded-full border border-border bg-card-glass px-2 py-0.5 text-[9px] shadow-3d-sm">
               <Eye className="h-2.5 w-2.5 text-primary" />
@@ -94,12 +70,11 @@ function Index() {
           </div>
         </section>
 
-        {/* FEATURES */}
         <section className="mt-24 grid gap-4 sm:grid-cols-3">
           {[
-            { icon: Zap, title: "60 seconds setup", body: "Sign in, pick a username, you're live." },
-            { icon: LinkIcon, title: "Up to 5 links", body: "Curate the links that matter — no clutter." },
-            { icon: Sparkles, title: "Yours forever", body: "nads.io/yourname stays yours. Edit anytime." },
+            { icon: Zap, title: "Beautifully simple", body: "Clean profile pages, no clutter." },
+            { icon: LinkIcon, title: "Curated links", body: "Only the links that matter." },
+            { icon: Sparkles, title: "Always yours", body: "nads.io/yourname stays yours." },
           ].map((f) => (
             <div key={f.title} className="rounded-2xl border border-border bg-card-glass p-5 shadow-3d-sm">
               <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-primary shadow-3d-sm">
@@ -111,44 +86,10 @@ function Index() {
           ))}
         </section>
 
-        {/* PREMIUM TEASER */}
-        <section className="mt-16">
-          <div className="relative overflow-hidden rounded-2xl border border-border bg-card-glass p-6 shadow-3d sm:p-8">
-            <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
-              <div className="max-w-md">
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary shadow-3d-sm">
-                  <Crown className="h-3 w-3" /> Premium · $1/mo
-                </div>
-                <h2 className="mt-3 font-display text-2xl font-semibold sm:text-3xl">
-                  Stand out with <span className="text-gradient">Premium</span>.
-                </h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Custom banner, animated profile glow, music player and realtime analytics.
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2 text-[11px]">
-                  {[
-                    { icon: Sparkles, label: "Custom banner" },
-                    { icon: Music, label: "Music player" },
-                    { icon: Crown, label: "Glowing avatar" },
-                    { icon: BarChart3, label: "Realtime analytics" },
-                  ].map((p) => (
-                    <span
-                      key={p.label}
-                      className="inline-flex items-center gap-1 rounded-full border border-border bg-background/60 px-2 py-0.5 text-muted-foreground shadow-3d-sm"
-                    >
-                      <p.icon className="h-3 w-3 text-primary" />
-                      {p.label}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <Link to="/premium">
-                <Button size="lg" className="h-11 rounded-xl bg-gradient-primary px-6 text-sm font-semibold shadow-3d">
-                  Go Premium <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </div>
+        <section className="mt-16 text-center">
+          <Link to="/help" className="text-sm text-primary underline underline-offset-4">
+            Need help?
+          </Link>
         </section>
       </main>
     </div>
