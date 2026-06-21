@@ -54,14 +54,8 @@ export const Route = createFileRoute("/$username")({
 
 function ProfilePage() {
   const { profile, links } = Route.useLoaderData();
-  const [showClaim, setShowClaim] = useState(true);
   const [views, setViews] = useState<number>(profile.view_count ?? 0);
 
-  useEffect(() => {
-    if (!showClaim) return;
-    const t = setTimeout(() => setShowClaim(false), 5000);
-    return () => clearTimeout(t);
-  }, [showClaim]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
