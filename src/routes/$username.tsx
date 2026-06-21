@@ -2,7 +2,7 @@ import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { recordView } from "@/lib/views.functions";
-import { Button } from "@/components/ui/button";
+
 import { Sparkles, Eye, Crown, Play, Pause, Music } from "lucide-react";
 
 export const Route = createFileRoute("/$username")({
